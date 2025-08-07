@@ -32,27 +32,31 @@ def check_python_version() -> Dict[str, Any]:
 
 def check_dependencies() -> Dict[str, Any]:
     """Check if all required dependencies are installed."""
-    required_packages = [
-        'anthropic',
-        'python-dotenv',
-        'pandas',
-        'numpy',
-        'python-dateutil',
-        'pathlib2',
-        'chardet',
-        'pyyaml',
-        'colorama'
-    ]
+    # Check if packages can be imported
+    package_imports = {
+        'anthropic': 'anthropic',
+        'python-dotenv': 'dotenv',
+        'python-dateutil': 'dateutil',
+        'pandas': 'pandas',
+        'numpy': 'numpy',
+        'pathlib2': 'pathlib2',
+        'chardet': 'chardet',
+        'pyyaml': 'yaml',
+        'colorama': 'colorama',
+        'nltk': 'nltk',
+        'textblob': 'textblob',
+        'python-docx': 'docx'
+    }
     
     missing_packages = []
     installed_packages = []
     
-    for package in required_packages:
+    for package_name, module_name in package_imports.items():
         try:
-            importlib.import_module(package.replace('-', '_'))
-            installed_packages.append(package)
+            importlib.import_module(module_name)
+            installed_packages.append(package_name)
         except ImportError:
-            missing_packages.append(package)
+            missing_packages.append(package_name)
     
     return {
         'success': len(missing_packages) == 0,

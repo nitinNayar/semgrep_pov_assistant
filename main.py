@@ -399,6 +399,140 @@ def process_transcripts(transcript_files: List[Path], config: Dict[str, Any], us
     else:
         log_warning("No transcript results available for technical deployment analysis")
     
+    # Step 5: Customer Overview Analysis
+    if results.get('transcripts') and len(results['transcripts']) > 0:
+        log_info("Step 5: Analyzing Customer Overview...")
+        customer_analysis = analyze_customer_overview(results['transcripts'], call_classifications, claude_client)
+        results['customer_analysis'] = customer_analysis
+        
+        # Display customer overview analysis summary
+        print("\n" + "=" * 60)
+        print("👥 CUSTOMER OVERVIEW ANALYSIS")
+        print("=" * 60)
+        
+        if customer_analysis and 'error' not in customer_analysis:
+            # Current State
+            current_state = customer_analysis.get('current_state', {})
+            if current_state:
+                print(f"📊 CURRENT STATE:")
+                print(f"   SAST Tooling: {current_state.get('sast_tooling', 'Unknown')}")
+                print(f"   SCA Tooling: {current_state.get('sca_tooling', 'Unknown')}")
+                print(f"   Secrets Detection: {current_state.get('secrets_detection', 'Unknown')}")
+                challenges = current_state.get('overall_challenges', [])
+                if challenges:
+                    print(f"   Key Challenges:")
+                    for challenge in challenges:
+                        print(f"     • {challenge}")
+            
+            # Negative Consequences
+            negative_consequences = customer_analysis.get('negative_consequences', {})
+            if negative_consequences:
+                print(f"\n⚠️  NEGATIVE CONSEQUENCES:")
+                operational_impact = negative_consequences.get('operational_impact', [])
+                if operational_impact:
+                    print(f"   Operational Impact:")
+                    for impact in operational_impact:
+                        print(f"     • {impact}")
+                
+                business_impact = negative_consequences.get('business_impact', [])
+                if business_impact:
+                    print(f"   Business Impact:")
+                    for impact in business_impact:
+                        print(f"     • {impact}")
+                
+                security_risk = negative_consequences.get('security_risk', [])
+                if security_risk:
+                    print(f"   Security Risk:")
+                    for risk in security_risk:
+                        print(f"     • {risk}")
+            
+            # Desired Future State
+            desired_future_state = customer_analysis.get('desired_future_state', {})
+            if desired_future_state:
+                print(f"\n🎯 DESIRED FUTURE STATE:")
+                operational_goals = desired_future_state.get('operational_goals', [])
+                if operational_goals:
+                    print(f"   Operational Goals:")
+                    for goal in operational_goals:
+                        print(f"     • {goal}")
+                
+                security_goals = desired_future_state.get('security_goals', [])
+                if security_goals:
+                    print(f"   Security Goals:")
+                    for goal in security_goals:
+                        print(f"     • {goal}")
+                
+                business_goals = desired_future_state.get('business_goals', [])
+                if business_goals:
+                    print(f"   Business Goals:")
+                    for goal in business_goals:
+                        print(f"     • {goal}")
+            
+            # Key Semgrep Capabilities
+            key_capabilities = customer_analysis.get('key_semgrep_capabilities', {})
+            if key_capabilities:
+                print(f"\n🔧 KEY SEMGREP CAPABILITIES:")
+                sast_capabilities = key_capabilities.get('sast_capabilities', [])
+                if sast_capabilities:
+                    print(f"   SAST Capabilities:")
+                    for capability in sast_capabilities:
+                        print(f"     • {capability}")
+                
+                sca_capabilities = key_capabilities.get('sca_capabilities', [])
+                if sca_capabilities:
+                    print(f"   SCA Capabilities:")
+                    for capability in sca_capabilities:
+                        print(f"     • {capability}")
+                
+                secrets_capabilities = key_capabilities.get('secrets_capabilities', [])
+                if secrets_capabilities:
+                    print(f"   Secrets Capabilities:")
+                    for capability in secrets_capabilities:
+                        print(f"     • {capability}")
+                
+                integration_capabilities = key_capabilities.get('integration_capabilities', [])
+                if integration_capabilities:
+                    print(f"   Integration Capabilities:")
+                    for capability in integration_capabilities:
+                        print(f"     • {capability}")
+            
+            # POV Strategy
+            pov_strategy = customer_analysis.get('pov_strategy', {})
+            if pov_strategy:
+                print(f"\n📋 POV STRATEGY:")
+                primary_focus = pov_strategy.get('primary_focus_areas', [])
+                if primary_focus:
+                    print(f"   Primary Focus Areas:")
+                    for focus in primary_focus:
+                        print(f"     • {focus}")
+                
+                demo_priorities = pov_strategy.get('demonstration_priorities', [])
+                if demo_priorities:
+                    print(f"   Demonstration Priorities:")
+                    for priority in demo_priorities:
+                        print(f"     • {priority}")
+                
+                success_metrics = pov_strategy.get('success_metrics', [])
+                if success_metrics:
+                    print(f"   Success Metrics:")
+                    for metric in success_metrics:
+                        print(f"     • {metric}")
+            
+            # Key Transcript Snippets
+            snippets = customer_analysis.get('key_transcript_snippets', [])
+            if snippets:
+                print(f"\n💬 KEY TRANSCRIPT SNIPPETS:")
+                for snippet in snippets:
+                    print(f"   📄 {snippet.get('call', 'Unknown call')}")
+                    print(f"     Context: {snippet.get('context', 'No context')}")
+                    print(f"     Quote: \"{snippet.get('quote', 'No quote')}\"")
+                    print(f"     Significance: {snippet.get('significance', 'No significance provided')}")
+        else:
+            print(f"❌ Customer Overview Analysis Error: {customer_analysis.get('error', 'Unknown error')}")
+            print("📝 A fallback customer overview analysis file will be created with basic information.")
+    else:
+        log_warning("No transcript results available for customer overview analysis")
+    
     # Create output files if requested
     if use_google_docs and file_client and results.get('transcripts'):
         log_info("Starting local file creation")
@@ -407,40 +541,40 @@ def process_transcripts(transcript_files: List[Path], config: Dict[str, Any], us
         for transcript_result in results['transcripts']:
             if 'error' not in transcript_result:
                 try:
-                    # Create call summary file
-                    summary_file = file_client.create_call_summary_file(transcript_result)
+                    # Create call summary Word document
+                    summary_file = file_client.create_word_document(transcript_result, 'call_summary')
                     created_files.append(summary_file)
                     
-                    # Create JSON analysis file
+                    # Create JSON analysis file (keep as JSON for data export)
                     json_file = file_client.create_json_analysis_file(transcript_result)
                     created_files.append(json_file)
                     
-                    # Create action items file
+                    # Create action items Word document
                     action_items = transcript_result.get('action_items', [])
                     if action_items:
-                        action_file = file_client.create_action_items_file(action_items)
+                        action_file = file_client.create_word_document({'action_items': action_items}, 'action_items')
                         created_files.append(action_file)
                     
-                    # Create sentiment analysis file
+                    # Create sentiment analysis Word document
                     sentiment_data = transcript_result.get('sentiment_analysis', {})
                     if sentiment_data:
-                        sentiment_file = file_client.create_sentiment_analysis_file(sentiment_data)
+                        sentiment_file = file_client.create_word_document({'sentiment_analysis': sentiment_data}, 'sentiment_analysis')
                         created_files.append(sentiment_file)
                     
                 except Exception as e:
                     log_error(f"Failed to create files for transcript: {e}")
         
-        # Create POV analysis file if available
+        # Create POV analysis Word document if available
         pov_analysis = results.get('pov_analysis', {})
         if pov_analysis:
             try:
-                pov_file = file_client.create_pov_analysis_file(pov_analysis)
+                pov_file = file_client.create_word_document(pov_analysis, 'pov_analysis')
                 created_files.append(pov_file)
-                log_info(f"Created POV analysis file: {pov_file}")
+                log_info(f"Created POV analysis Word document: {pov_file}")
             except Exception as e:
-                log_error(f"Failed to create POV analysis file: {e}")
+                log_error(f"Failed to create POV analysis Word document: {e}")
         else:
-            # Create a fallback POV analysis file if no analysis was generated
+            # Create a fallback POV analysis Word document if no analysis was generated
             try:
                 fallback_pov_data = {
                     'win_probability': 50,
@@ -456,23 +590,23 @@ def process_transcripts(transcript_files: List[Path], config: Dict[str, Any], us
                     'key_transcript_snippets': [],
                     'fallback_analysis': True
                 }
-                pov_file = file_client.create_pov_analysis_file(fallback_pov_data)
+                pov_file = file_client.create_word_document(fallback_pov_data, 'pov_analysis')
                 created_files.append(pov_file)
-                log_info(f"Created fallback POV analysis file: {pov_file}")
+                log_info(f"Created fallback POV analysis Word document: {pov_file}")
             except Exception as e:
-                log_error(f"Failed to create fallback POV analysis file: {e}")
+                log_error(f"Failed to create fallback POV analysis Word document: {e}")
         
-        # Create technical deployment analysis file if available
+        # Create technical deployment analysis Word document if available
         deployment_analysis = results.get('deployment_analysis', {})
         if deployment_analysis:
             try:
-                deployment_file = file_client.create_technical_deployment_analysis_file(deployment_analysis)
+                deployment_file = file_client.create_word_document(deployment_analysis, 'technical_deployment')
                 created_files.append(deployment_file)
-                log_info(f"Created technical deployment analysis file: {deployment_file}")
+                log_info(f"Created technical deployment analysis Word document: {deployment_file}")
             except Exception as e:
-                log_error(f"Failed to create technical deployment analysis file: {e}")
+                log_error(f"Failed to create technical deployment analysis Word document: {e}")
         else:
-            # Create a fallback technical deployment analysis file if no analysis was generated
+            # Create a fallback technical deployment analysis Word document if no analysis was generated
             try:
                 fallback_deployment_data = {
                     'scm_platform': {
@@ -528,11 +662,66 @@ def process_transcripts(transcript_files: List[Path], config: Dict[str, Any], us
                     'fallback_analysis': True,
                     'analysis_method': 'fallback'
                 }
-                deployment_file = file_client.create_technical_deployment_analysis_file(fallback_deployment_data)
+                deployment_file = file_client.create_word_document(fallback_deployment_data, 'technical_deployment')
                 created_files.append(deployment_file)
-                log_info(f"Created fallback technical deployment analysis file: {deployment_file}")
+                log_info(f"Created fallback technical deployment analysis Word document: {deployment_file}")
             except Exception as e:
-                log_error(f"Failed to create fallback technical deployment analysis file: {e}")
+                log_error(f"Failed to create fallback technical deployment analysis Word document: {e}")
+        
+        # Create customer overview analysis Word document if available
+        customer_analysis = results.get('customer_analysis', {})
+        if customer_analysis:
+            try:
+                customer_file = file_client.create_word_document(customer_analysis, 'customer_overview')
+                created_files.append(customer_file)
+                log_info(f"Created customer overview analysis Word document: {customer_file}")
+            except Exception as e:
+                log_error(f"Failed to create customer overview analysis Word document: {e}")
+        else:
+            # Create a fallback customer overview analysis Word document if no analysis was generated
+            try:
+                fallback_customer_data = {
+                    'current_state': {
+                        'sast_tooling': 'Unknown',
+                        'sca_tooling': 'Unknown',
+                        'secrets_detection': 'Unknown',
+                        'overall_challenges': ['Customer overview analysis was not generated due to processing issues'],
+                        'evidence': 'Fallback analysis based on processing issues'
+                    },
+                    'negative_consequences': {
+                        'operational_impact': ['Limited analysis data available'],
+                        'business_impact': ['Need more customer data'],
+                        'security_risk': ['Analysis incomplete'],
+                        'evidence': 'Fallback analysis based on processing issues'
+                    },
+                    'desired_future_state': {
+                        'operational_goals': ['Improve analysis process'],
+                        'security_goals': ['Better data collection'],
+                        'business_goals': ['Enhanced customer understanding'],
+                        'evidence': 'Fallback analysis based on processing issues'
+                    },
+                    'key_semgrep_capabilities': {
+                        'sast_capabilities': ['Standard SAST features'],
+                        'sca_capabilities': ['Standard SCA features'],
+                        'secrets_capabilities': ['Standard secrets detection'],
+                        'integration_capabilities': ['Standard integrations'],
+                        'evidence': 'Fallback analysis based on processing issues'
+                    },
+                    'pov_strategy': {
+                        'primary_focus_areas': ['Standard product demo'],
+                        'demonstration_priorities': ['Core capabilities'],
+                        'success_metrics': ['Basic success criteria'],
+                        'evidence': 'Fallback analysis based on processing issues'
+                    },
+                    'key_transcript_snippets': [],
+                    'fallback_analysis': True,
+                    'analysis_method': 'fallback'
+                }
+                customer_file = file_client.create_word_document(fallback_customer_data, 'customer_overview')
+                created_files.append(customer_file)
+                log_info(f"Created fallback customer overview analysis Word document: {customer_file}")
+            except Exception as e:
+                log_error(f"Failed to create fallback customer overview analysis Word document: {e}")
         
         results['created_files'] = created_files
         log_info(f"Created {len(created_files)} local files")
@@ -628,6 +817,28 @@ def print_summary(results: Dict[str, Any], use_google_docs: bool = True) -> None
         print(f"   • Deployment Complexity: {complexity}")
     else:
         print(f"\n🔧 TECHNICAL DEPLOYMENT SUMMARY:")
+        print(f"   • Analysis: Not available")
+    
+    # Customer overview analysis summary
+    customer_analysis = results.get('customer_analysis', {})
+    if customer_analysis and 'error' not in customer_analysis:
+        print(f"\n👥 CUSTOMER OVERVIEW SUMMARY:")
+        current_state = customer_analysis.get('current_state', {})
+        if current_state:
+            print(f"   • Current SAST: {current_state.get('sast_tooling', 'Unknown')}")
+            print(f"   • Current SCA: {current_state.get('sca_tooling', 'Unknown')}")
+        desired_future = customer_analysis.get('desired_future_state', {})
+        if desired_future:
+            operational_goals = desired_future.get('operational_goals', [])
+            if operational_goals:
+                print(f"   • Primary Goal: {operational_goals[0] if operational_goals else 'Unknown'}")
+        pov_strategy = customer_analysis.get('pov_strategy', {})
+        if pov_strategy:
+            primary_focus = pov_strategy.get('primary_focus_areas', [])
+            if primary_focus:
+                print(f"   • POV Focus: {primary_focus[0] if primary_focus else 'Unknown'}")
+    else:
+        print(f"\n👥 CUSTOMER OVERVIEW SUMMARY:")
         print(f"   • Analysis: Not available")
     
     print("\n" + "=" * 60)
@@ -1781,6 +1992,496 @@ def _create_fallback_technical_deployment_analysis(technical_summary: str) -> Di
         'migration_considerations': [],
         'technical_risks': [],
         'recommendations': [],
+        'fallback_analysis': True,
+        'analysis_method': 'fallback'
+    }
+
+def analyze_customer_overview(transcript_results: List[Dict], call_classifications: Dict[str, str], claude_client) -> Dict[str, Any]:
+    """Analyze customer overview details across all call transcripts in an engagement."""
+    
+    log_info("Starting Customer Overview Analysis...")
+    
+    # Step 1: Extract customer insights from each transcript
+    customer_insights = []
+    for result in transcript_results:
+        if 'error' not in result:
+            insights = {
+                'filename': result.get('filename', 'Unknown'),
+                'call_type': call_classifications.get(result.get('filename', ''), 'Unknown'),
+                'raw_analysis': result.get('analysis', {}).get('raw_analysis', ''),
+                'key_discussion_points': result.get('analysis', {}).get('key_discussion_points', []),
+                'business_context': result.get('analysis', {}).get('business_context', {}),
+                'action_items': result.get('action_items', []),
+                'sentiment_analysis': result.get('sentiment_analysis', {}),
+                'next_steps': result.get('analysis', {}).get('next_steps', [])
+            }
+            customer_insights.append(insights)
+    
+    if not customer_insights:
+        log_warning("No valid transcript insights found for customer overview analysis")
+        return {
+            'error': 'No valid transcript data available for customer overview analysis',
+            'customer_summary': {},
+            'reasoning': 'Insufficient data for analysis'
+        }
+    
+    # Step 2: Create comprehensive customer summary for Claude analysis
+    customer_summary = _create_customer_overview_summary(customer_insights)
+    
+    # Step 3: Generate customer overview analysis using Claude
+    customer_analysis = _generate_customer_overview_analysis(customer_summary, claude_client)
+    
+    return customer_analysis
+
+def _create_customer_overview_summary(customer_insights: List[Dict]) -> str:
+    """Create a comprehensive summary of all customer overview insights."""
+    
+    summary_parts = []
+    
+    # Call Overview
+    call_types = [insight['call_type'] for insight in customer_insights]
+    call_type_counts = {call_type: call_types.count(call_type) for call_type in set(call_types)}
+    
+    summary_parts.append("## CUSTOMER OVERVIEW")
+    summary_parts.append(f"Total Calls: {len(customer_insights)}")
+    summary_parts.append("Call Types:")
+    for call_type, count in call_type_counts.items():
+        summary_parts.append(f"  - {call_type}: {count}")
+    
+    # Customer Insights from Each Call
+    summary_parts.append("\n## DETAILED CUSTOMER INSIGHTS")
+    for i, insight in enumerate(customer_insights, 1):
+        summary_parts.append(f"\n### Call {i}: {insight['filename']}")
+        summary_parts.append(f"Type: {insight['call_type']}")
+        
+        # Key discussion points
+        if insight['key_discussion_points']:
+            summary_parts.append("Key Discussion Points:")
+            for point in insight['key_discussion_points'][:10]:  # Top 10 points
+                summary_parts.append(f"  - {point}")
+        
+        # Business context
+        if insight['business_context']:
+            summary_parts.append("Business Context:")
+            for key, value in insight['business_context'].items():
+                if isinstance(value, list):
+                    summary_parts.append(f"  - {key}: {', '.join(value[:5])}")  # Top 5 items
+                else:
+                    summary_parts.append(f"  - {key}: {value}")
+        
+        # Action items related to customer challenges
+        if insight['action_items']:
+            summary_parts.append("Customer-Related Action Items:")
+            for item in insight['action_items'][:5]:  # Top 5 items
+                action = item.get('action', 'N/A')
+                if any(keyword in action.lower() for keyword in ['challenge', 'issue', 'problem', 'pain', 'current', 'tool', 'solution', 'migration', 'integration']):
+                    summary_parts.append(f"  - {action} (Owner: {item.get('owner', 'N/A')}, Priority: {item.get('priority', 'N/A')})")
+        
+        # Raw analysis (first 1000 characters for customer details)
+        if insight['raw_analysis']:
+            summary_parts.append("Customer Details:")
+            raw_text = insight['raw_analysis'][:1000] + "..." if len(insight['raw_analysis']) > 1000 else insight['raw_analysis']
+            summary_parts.append(f"  {raw_text}")
+    
+    # Overall customer patterns
+    summary_parts.append("\n## CUSTOMER PATTERNS")
+    
+    # Most common customer challenges
+    all_text = " ".join([insight.get('raw_analysis', '') for insight in customer_insights])
+    challenge_terms = ['challenge', 'issue', 'problem', 'pain point', 'difficulty', 'struggle', 'manual', 'timeout', 'performance', 'false positive', 'alert', 'triage', 'overhead', 'complexity']
+    
+    found_challenges = []
+    for term in challenge_terms:
+        if term.lower() in all_text.lower():
+            found_challenges.append(term)
+    
+    if found_challenges:
+        summary_parts.append("Customer Challenges Mentioned:")
+        for challenge in found_challenges:
+            summary_parts.append(f"  - {challenge}")
+    
+    return "\n".join(summary_parts)
+
+def _generate_customer_overview_analysis(customer_summary: str, claude_client) -> Dict[str, Any]:
+    """Generate comprehensive customer overview analysis using Claude."""
+    
+    # Ensure we have enough content for analysis
+    if len(customer_summary) < 100:
+        log_warning("Customer summary too short for meaningful overview analysis")
+        return {
+            'error': 'Insufficient data for detailed customer overview analysis',
+            'customer_summary': {},
+            'reasoning': 'Insufficient data for analysis'
+        }
+    
+    customer_analysis_prompt = f"""You are an expert customer success strategist analyzing customer engagement data. Based on the following customer data, provide a comprehensive customer overview analysis.
+
+CUSTOMER DATA:
+{customer_summary}
+
+Please provide a detailed customer overview analysis in the following JSON format. IMPORTANT: Respond with ONLY the JSON object, no additional text, explanations, or markdown formatting:
+
+{{
+    "current_state": {{
+        "sast_tooling": "<current SAST tools and their limitations>",
+        "sca_tooling": "<current SCA tools and their limitations>",
+        "secrets_detection": "<current secrets detection tools and their limitations>",
+        "overall_challenges": [
+            "<challenge 1>",
+            "<challenge 2>",
+            "<challenge 3>"
+        ],
+        "evidence": "<quotes or evidence from transcripts>"
+    }},
+    "negative_consequences": {{
+        "operational_impact": [
+            "<operational consequence 1>",
+            "<operational consequence 2>"
+        ],
+        "business_impact": [
+            "<business consequence 1>",
+            "<business consequence 2>"
+        ],
+        "security_risk": [
+            "<security risk 1>",
+            "<security risk 2>"
+        ],
+        "evidence": "<quotes or evidence from transcripts>"
+    }},
+    "desired_future_state": {{
+        "operational_goals": [
+            "<operational goal 1>",
+            "<operational goal 2>"
+        ],
+        "security_goals": [
+            "<security goal 1>",
+            "<security goal 2>"
+        ],
+        "business_goals": [
+            "<business goal 1>",
+            "<business goal 2>"
+        ],
+        "evidence": "<quotes or evidence from transcripts>"
+    }},
+    "key_semgrep_capabilities": {{
+        "sast_capabilities": [
+            "<SAST capability 1>",
+            "<SAST capability 2>"
+        ],
+        "sca_capabilities": [
+            "<SCA capability 1>",
+            "<SCA capability 2>"
+        ],
+        "secrets_capabilities": [
+            "<Secrets capability 1>",
+            "<Secrets capability 2>"
+        ],
+        "integration_capabilities": [
+            "<Integration capability 1>",
+            "<Integration capability 2>"
+        ],
+        "evidence": "<quotes or evidence from transcripts>"
+    }},
+    "pov_strategy": {{
+        "primary_focus_areas": [
+            "<focus area 1>",
+            "<focus area 2>"
+        ],
+        "demonstration_priorities": [
+            "<demo priority 1>",
+            "<demo priority 2>"
+        ],
+        "success_metrics": [
+            "<success metric 1>",
+            "<success metric 2>"
+        ],
+        "evidence": "<quotes or evidence from transcripts>"
+    }},
+    "key_transcript_snippets": [
+        {{
+            "call": "<call filename>",
+            "context": "<what was happening>",
+            "quote": "<relevant quote from transcript>",
+            "significance": "<why this quote is important for customer overview>"
+        }}
+    ]
+}}
+
+Focus on:
+1. Concrete evidence from the transcripts about current tooling and challenges
+2. Specific negative consequences of their current state
+3. Clear desired future state based on their expressed needs
+4. Relevant Semgrep capabilities that address their specific challenges
+5. Strategic POV approach based on their pain points
+
+CRITICAL: Respond with ONLY the JSON object above, no markdown formatting, no code blocks, no additional text."""
+    
+    try:
+        response = claude_client.analyze_pov_win_probability(customer_summary, customer_analysis_prompt)
+        
+        if response.get('success'):
+            analysis_text = response.get('analysis', '')
+            log_debug(f"Raw Claude response for customer overview analysis: {analysis_text[:500]}...")
+            
+            # Try to extract JSON from the response
+            try:
+                # First, try to find JSON wrapped in markdown code blocks
+                import re
+                
+                # Look for JSON in markdown code blocks
+                json_code_block_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', analysis_text, re.DOTALL)
+                if json_code_block_match:
+                    json_str = json_code_block_match.group(1)
+                    log_debug("Found JSON in markdown code block")
+                else:
+                    # Look for JSON without markdown wrapping - improved pattern
+                    json_match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', analysis_text, re.DOTALL)
+                    if json_match:
+                        json_str = json_match.group(0)
+                        log_debug("Found JSON without markdown wrapping")
+                    else:
+                        # Try to find the largest JSON-like structure with better pattern
+                        json_match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', analysis_text, re.DOTALL)
+                        if json_match:
+                            json_str = json_match.group(0)
+                            log_debug("Found JSON using improved pattern")
+                        else:
+                            # Last resort: find any JSON-like structure
+                            json_match = re.search(r'\{.*\}', analysis_text, re.DOTALL)
+                            if json_match:
+                                json_str = json_match.group(0)
+                                log_debug("Found JSON using fallback pattern")
+                            else:
+                                raise ValueError("No JSON structure found in response")
+                
+                # Clean up the JSON string
+                json_str = json_str.strip()
+                
+                # Remove any leading/trailing text that might be before/after the JSON
+                if json_str.startswith('```'):
+                    json_str = json_str[3:]
+                if json_str.endswith('```'):
+                    json_str = json_str[:-3]
+                
+                # Additional cleanup for common issues
+                json_str = json_str.replace('\n    ', '\n')  # Fix indentation issues
+                json_str = json_str.replace('\n  ', '\n')    # Fix double spaces
+                json_str = json_str.replace('\n    "', '\n"')  # Fix specific indentation issue
+                json_str = json_str.replace('\n  "', '\n"')    # Fix double space before quotes
+                
+                log_debug(f"Cleaned JSON string (first 200 chars): {json_str[:200]}...")
+                log_debug(f"JSON string length: {len(json_str)}")
+                
+                # Parse the JSON
+                import json
+                customer_analysis = json.loads(json_str)
+                
+                log_info("Successfully generated customer overview analysis")
+                return customer_analysis
+                
+            except json.JSONDecodeError as e:
+                log_warning(f"Failed to parse JSON from Claude response: {e}")
+                log_debug(f"JSON parsing error details: {e}")
+                log_debug(f"Attempted to parse: {json_str[:200]}...")
+                log_debug(f"Full JSON string: {json_str}")
+                return _parse_customer_overview_text(analysis_text)
+            except Exception as e:
+                log_warning(f"Error extracting JSON from Claude response: {e}")
+                log_debug(f"Full analysis text: {analysis_text}")
+                return _parse_customer_overview_text(analysis_text)
+        else:
+            log_error("Failed to generate customer overview analysis with Claude")
+            return _create_fallback_customer_overview_analysis(customer_summary)
+            
+    except Exception as e:
+        log_error(f"Error generating customer overview analysis: {e}")
+        return _create_fallback_customer_overview_analysis(customer_summary)
+
+def _parse_customer_overview_text(analysis_text: str) -> Dict[str, Any]:
+    """Parse customer overview analysis from text response when JSON parsing fails."""
+    
+    log_debug("Attempting to parse customer overview analysis from text response")
+    
+    # Extract key customer information using regex patterns
+    import re
+    
+    # Extract current state information
+    current_state = {
+        'sast_tooling': 'Unknown',
+        'sca_tooling': 'Unknown', 
+        'secrets_detection': 'Unknown',
+        'overall_challenges': [],
+        'evidence': 'Text parsing fallback'
+    }
+    
+    # Look for current tooling mentions
+    if 'github' in analysis_text.lower():
+        current_state['sast_tooling'] = 'GitHub Advanced Security with CodeQL'
+    if 'dependabot' in analysis_text.lower():
+        current_state['sca_tooling'] = 'Dependabot'
+    
+    # Extract challenges
+    challenge_patterns = [
+        r'challenges["\s]*:["\s]*\[([^\]]+)\]',
+        r'challenge["\s]*:["\s]*\[([^\]]+)\]',
+        r'issues["\s]*:["\s]*\[([^\]]+)\]',
+        r'problems["\s]*:["\s]*\[([^\]]+)\]'
+    ]
+    
+    for pattern in challenge_patterns:
+        challenges_match = re.search(pattern, analysis_text, re.IGNORECASE)
+        if challenges_match:
+            challenges_str = challenges_match.group(1)
+            challenges = [c.strip().strip('"') for c in challenges_str.split(',')]
+            current_state['overall_challenges'] = [c for c in challenges if c and len(c) > 3]
+            break
+    
+    # Extract negative consequences
+    negative_consequences = {
+        'operational_impact': [],
+        'business_impact': [],
+        'security_risk': [],
+        'evidence': 'Text parsing fallback'
+    }
+    
+    # Look for impact indicators
+    if 'manual' in analysis_text.lower():
+        negative_consequences['operational_impact'].append('Manual triage processes')
+    if 'timeout' in analysis_text.lower():
+        negative_consequences['operational_impact'].append('Performance timeouts')
+    if 'false positive' in analysis_text.lower():
+        negative_consequences['operational_impact'].append('High false positive rates')
+    
+    # Extract desired future state
+    desired_future_state = {
+        'operational_goals': [],
+        'security_goals': [],
+        'business_goals': [],
+        'evidence': 'Text parsing fallback'
+    }
+    
+    # Look for goal indicators
+    if 'automation' in analysis_text.lower():
+        desired_future_state['operational_goals'].append('Automated processes')
+    if 'integration' in analysis_text.lower():
+        desired_future_state['operational_goals'].append('Better integration')
+    
+    # Extract Semgrep capabilities
+    key_semgrep_capabilities = {
+        'sast_capabilities': [],
+        'sca_capabilities': [],
+        'secrets_capabilities': [],
+        'integration_capabilities': [],
+        'evidence': 'Text parsing fallback'
+    }
+    
+    # Look for capability mentions
+    if 'ai' in analysis_text.lower():
+        key_semgrep_capabilities['sast_capabilities'].append('AI-powered false positive reduction')
+    if 'supply chain' in analysis_text.lower():
+        key_semgrep_capabilities['sca_capabilities'].append('Supply chain security')
+    
+    # Extract POV strategy
+    pov_strategy = {
+        'primary_focus_areas': [],
+        'demonstration_priorities': [],
+        'success_metrics': [],
+        'evidence': 'Text parsing fallback'
+    }
+    
+    # Look for strategy indicators
+    if 'demo' in analysis_text.lower():
+        pov_strategy['demonstration_priorities'].append('Product demonstrations')
+    if 'poc' in analysis_text.lower():
+        pov_strategy['primary_focus_areas'].append('Proof of concept')
+    
+    return {
+        'current_state': current_state,
+        'negative_consequences': negative_consequences,
+        'desired_future_state': desired_future_state,
+        'key_semgrep_capabilities': key_semgrep_capabilities,
+        'pov_strategy': pov_strategy,
+        'key_transcript_snippets': [],
+        'parsing_method': 'text_fallback'
+    }
+
+def _create_fallback_customer_overview_analysis(customer_summary: str) -> Dict[str, Any]:
+    """Create a fallback customer overview analysis when Claude analysis fails."""
+    
+    log_debug("Creating fallback customer overview analysis")
+    
+    # Analyze the customer summary to provide basic insights
+    summary_lower = customer_summary.lower()
+    
+    # Extract basic customer information
+    current_state = {
+        'sast_tooling': 'Unknown',
+        'sca_tooling': 'Unknown',
+        'secrets_detection': 'Unknown',
+        'overall_challenges': [],
+        'evidence': 'Fallback analysis based on customer summary'
+    }
+    
+    if 'github' in summary_lower:
+        current_state['sast_tooling'] = 'GitHub Advanced Security with CodeQL'
+    if 'dependabot' in summary_lower:
+        current_state['sca_tooling'] = 'Dependabot'
+    
+    # Extract challenges
+    if 'manual' in summary_lower:
+        current_state['overall_challenges'].append('Manual triage processes')
+    if 'timeout' in summary_lower:
+        current_state['overall_challenges'].append('Performance timeouts')
+    if 'false positive' in summary_lower:
+        current_state['overall_challenges'].append('High false positive rates')
+    
+    # Generate negative consequences
+    negative_consequences = {
+        'operational_impact': [],
+        'business_impact': [],
+        'security_risk': [],
+        'evidence': 'Fallback analysis based on customer summary'
+    }
+    
+    if 'manual' in summary_lower:
+        negative_consequences['operational_impact'].append('Manual triage burden')
+    if 'timeout' in summary_lower:
+        negative_consequences['operational_impact'].append('Performance issues')
+    if 'false positive' in summary_lower:
+        negative_consequences['operational_impact'].append('Alert fatigue')
+    
+    # Generate desired future state
+    desired_future_state = {
+        'operational_goals': ['Automated processes', 'Better performance'],
+        'security_goals': ['Reduced false positives', 'Better coverage'],
+        'business_goals': ['Cost efficiency', 'Developer satisfaction'],
+        'evidence': 'Fallback analysis based on customer summary'
+    }
+    
+    # Generate Semgrep capabilities
+    key_semgrep_capabilities = {
+        'sast_capabilities': ['AI-powered analysis', 'Multi-language support'],
+        'sca_capabilities': ['Supply chain security', 'Dependency analysis'],
+        'secrets_capabilities': ['Secrets detection', 'Validation'],
+        'integration_capabilities': ['CI/CD integration', 'API access'],
+        'evidence': 'Fallback analysis based on customer summary'
+    }
+    
+    # Generate POV strategy
+    pov_strategy = {
+        'primary_focus_areas': ['Pain point demonstration', 'ROI analysis'],
+        'demonstration_priorities': ['Product capabilities', 'Integration'],
+        'success_metrics': ['Reduced false positives', 'Performance improvement'],
+        'evidence': 'Fallback analysis based on customer summary'
+    }
+    
+    return {
+        'current_state': current_state,
+        'negative_consequences': negative_consequences,
+        'desired_future_state': desired_future_state,
+        'key_semgrep_capabilities': key_semgrep_capabilities,
+        'pov_strategy': pov_strategy,
+        'key_transcript_snippets': [],
         'fallback_analysis': True,
         'analysis_method': 'fallback'
     }
