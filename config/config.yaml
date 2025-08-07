@@ -1,0 +1,108 @@
+# Semgrep POV Assistant Configuration File
+# This file contains all the configuration settings for the application
+
+# Application Settings
+app:
+  name: "Semgrep POV Assistant"
+  version: "1.0.0"
+  debug: false
+  max_retries: 3
+  retry_delay: 5  # seconds
+
+# File Paths
+paths:
+  transcripts_dir: "data/transcripts"
+  output_dir: "data/output"
+  logs_dir: "logs"
+  
+# Claude Configuration
+claude:
+  model: "claude-sonnet-4-20250514"  # Primary model for analysis
+  fallback_model: "claude-3-7-sonnet-20250219"  # Fallback model if primary fails
+  max_tokens: 20000  # Maximum tokens per request
+  temperature: 0.3  # Lower temperature for more consistent outputs
+  max_context_length: 200000  # Maximum context length for the model
+  
+# Context Management
+context:
+  chunk_size: 20000  # Tokens per chunk for long transcripts
+  overlap_size: 2000  # Overlap between chunks to maintain context
+  max_chunks_per_request: 4  # Maximum chunks to process in one request
+  
+# Document Generation Settings
+documents:
+  # Individual Call Summary Settings
+  call_summary:
+    include_participants: true
+    include_duration: true
+    include_key_topics: true
+    include_action_items: true
+    include_sentiment: true
+    
+  # Engagement Summary Settings
+  engagement_summary:
+    include_timeline: true
+    include_progress_metrics: true
+    include_stakeholder_analysis: true
+    
+  # Action Items Settings
+  action_items:
+    include_priority_levels: true
+    include_due_dates: true
+    include_owners: true
+    include_status_tracking: true
+    
+  # Win/Loss Analysis Settings
+  win_loss_analysis:
+    include_probability_score: true
+    include_risk_factors: true
+    include_improvement_recommendations: true
+    include_competitor_analysis: true
+
+# Processing Settings
+processing:
+  batch_size: 5  # Number of transcripts to process in one batch
+  parallel_processing: false  # Enable for faster processing (requires more resources)
+  save_intermediate_results: true
+  cleanup_temp_files: true
+  
+# Logging Configuration
+logging:
+  level: "DEBUG"  # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_logging: true
+  console_logging: true
+  
+# Error Handling
+error_handling:
+  continue_on_error: true  # Continue processing other files if one fails
+  log_errors: true
+  retry_failed_requests: true
+  max_retry_attempts: 3
+  
+# Rate Limiting
+rate_limiting:
+  requests_per_minute: 60  # Claude API rate limit
+  delay_between_requests: 1  # seconds
+  
+# Text Processing
+text_processing:
+  remove_noise: true  # Remove common transcript artifacts
+  normalize_whitespace: true
+  detect_encoding: true
+  supported_formats: ["txt", "docx", "pdf", "md"]
+  max_file_size_mb: 10  # Maximum file size in MB
+  encoding_detection: true  # Auto-detect file encoding
+  chunk_size: 4000  # Number of characters per chunk for processing
+  
+# Action Item Extraction
+action_items:
+  keywords: ["action item", "todo", "task", "follow up", "next steps"]
+  priority_keywords: ["high", "urgent", "critical", "low", "medium"]
+  date_patterns: ["due", "by", "deadline", "target"]
+  
+# Sentiment Analysis
+sentiment:
+  enabled: true
+  include_confidence_scores: true
+  track_sentiment_changes: true 

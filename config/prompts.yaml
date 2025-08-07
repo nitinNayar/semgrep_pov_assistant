@@ -1,0 +1,348 @@
+# Claude Prompt Templates for Semgrep POV Assistant
+# This file contains all the prompt templates used for different analysis tasks
+
+# Individual Call Analysis Prompts
+call_analysis:
+  # Main call summary prompt
+  summary: |
+    You are an expert business analyst reviewing a call transcript. Please provide a comprehensive summary of this call with the following structure:
+    
+    ## Call Overview
+    - Date and Time: [extract from transcript]
+    - Participants: [list all participants]
+    - Duration: [if available]
+    - Call Type: [discovery, demo, follow-up, etc.]
+    
+    ## Key Discussion Points
+    [List 3-5 main topics discussed, with brief context]
+    
+    ## Business Context
+    - Current Status: [where the engagement stands]
+    - Pain Points Identified: [list specific pain points mentioned]
+    - Requirements Discussed: [technical and business requirements]
+    
+    ## Action Items
+    [Extract all action items with the following format:
+    - Action: [description]
+    - Owner: [person responsible]
+    - Due Date: [if mentioned]
+    - Priority: [High/Medium/Low based on context]]
+    
+    ## Sentiment Analysis
+    - Overall Sentiment: [Positive/Neutral/Negative]
+    - Key Sentiment Indicators: [specific phrases or moments]
+    - Engagement Level: [High/Medium/Low]
+    
+    ## Next Steps
+    [List immediate next steps and recommendations]
+    
+    Please analyze the following transcript:
+    {transcript_text}
+    
+  # Action item extraction prompt
+  action_items: |
+    Extract all action items from this call transcript. For each action item, identify:
+    
+    1. The specific action or task
+    2. Who is responsible (owner)
+    3. Due date or timeline (if mentioned)
+    4. Priority level (High/Medium/Low)
+    5. Context or background
+    
+    Format the response as a structured list:
+    
+    ## Action Items
+    
+    ### Action Item 1
+    - **Action**: [description]
+    - **Owner**: [person name]
+    - **Due Date**: [date if mentioned]
+    - **Priority**: [High/Medium/Low]
+    - **Context**: [background information]
+    
+    [Continue for all action items found]
+    
+    Transcript:
+    {transcript_text}
+    
+  # Sentiment analysis prompt
+  sentiment: |
+    Analyze the sentiment and engagement level throughout this call transcript. Focus on:
+    
+    1. Overall sentiment (Positive/Neutral/Negative)
+    2. Sentiment changes throughout the call
+    3. Key moments that influenced sentiment
+    4. Engagement level of participants
+    5. Specific phrases or statements that indicate sentiment
+    
+    Provide your analysis in this format:
+    
+    ## Sentiment Analysis
+    
+    ### Overall Assessment
+    - **Primary Sentiment**: [Positive/Neutral/Negative]
+    - **Confidence Level**: [High/Medium/Low]
+    - **Engagement Level**: [High/Medium/Low]
+    
+    ### Key Sentiment Indicators
+    [List specific phrases, moments, or statements that influenced sentiment]
+    
+    ### Sentiment Progression
+    [Describe how sentiment changed throughout the call]
+    
+    ### Recommendations
+    [Based on sentiment analysis, provide recommendations for follow-up]
+    
+    Transcript:
+    {transcript_text}
+
+# Engagement-Level Analysis Prompts
+engagement_analysis:
+  # Overall engagement status
+  status: |
+    Based on the analysis of multiple call transcripts, provide a comprehensive engagement status report:
+    
+    ## Engagement Overview
+    - **Client**: [client name]
+    - **Engagement Type**: [POV, Implementation, etc.]
+    - **Current Phase**: [Discovery, Evaluation, Decision, etc.]
+    - **Timeline**: [start date to current]
+    
+    ## Progress Summary
+    - **Completed Milestones**: [list completed items]
+    - **Current Status**: [detailed current state]
+    - **Remaining Work**: [what's left to do]
+    
+    ## Key Achievements
+    [List major accomplishments and positive developments]
+    
+    ## Challenges & Risks
+    [List any challenges, concerns, or risks identified]
+    
+    ## Stakeholder Analysis
+    [Analysis of key stakeholders and their positions]
+    
+    ## Timeline & Next Steps
+    [Upcoming milestones and critical dates]
+    
+    Use the following call summaries for analysis:
+    {call_summaries}
+    
+  # Action items aggregation
+  action_items_master: |
+    Compile all action items from multiple calls into a comprehensive master list. Organize by:
+    
+    ## Action Items Master List
+    
+    ### High Priority
+    [List all high priority items with details]
+    
+    ### Medium Priority
+    [List all medium priority items with details]
+    
+    ### Low Priority
+    [List all low priority items with details]
+    
+    ### Completed Items
+    [List any items that have been completed]
+    
+    For each action item, include:
+    - **Action**: [description]
+    - **Owner**: [person responsible]
+    - **Due Date**: [if specified]
+    - **Status**: [Open/In Progress/Completed]
+    - **Source Call**: [which call this came from]
+    - **Context**: [background information]
+    
+    Use the following action items data:
+    {action_items_data}
+    
+  # Win/Loss probability analysis
+  win_loss_analysis: |
+    Based on the analysis of all call transcripts, provide a comprehensive win/loss probability assessment:
+    
+    ## Win/Loss Probability Assessment
+    
+    ### Probability Score
+    - **Current Probability**: [X% - provide specific percentage]
+    - **Confidence Level**: [High/Medium/Low]
+    - **Trend**: [Improving/Declining/Stable]
+    
+    ### Positive Indicators
+    [List all factors that support a win]
+    
+    ### Risk Factors
+    [List all factors that could lead to a loss]
+    
+    ### Competitive Analysis
+    [Assessment of competitive position]
+    
+    ### Critical Success Factors
+    [What needs to happen to win]
+    
+    ### Recommendations for Improvement
+    [Specific actions to improve win probability]
+    
+    ### Timeline Considerations
+    [How timing affects the probability]
+    
+    Use the following engagement data for analysis:
+    {engagement_data}
+
+# Document Generation Prompts
+document_generation:
+  # Call summary document
+  call_summary_doc: |
+    Create a professional call summary document with the following structure:
+    
+    # Call Summary - [Date]
+    
+    ## Executive Summary
+    [2-3 sentence overview of the call]
+    
+    ## Call Details
+    - **Date**: [date]
+    - **Time**: [time]
+    - **Duration**: [duration]
+    - **Participants**: [list]
+    - **Call Type**: [type]
+    
+    ## Key Discussion Points
+    [Detailed discussion of main topics]
+    
+    ## Business Impact
+    [How this call affects the overall engagement]
+    
+    ## Action Items
+    [Structured list of all action items]
+    
+    ## Next Steps
+    [Immediate next steps and recommendations]
+    
+    Use this call data:
+    {call_data}
+    
+  # Engagement status document
+  engagement_status_doc: |
+    Create a comprehensive engagement status document:
+    
+    # Engagement Status Report - [Client Name]
+    
+    ## Executive Summary
+    [High-level overview of engagement status]
+    
+    ## Engagement Overview
+    - **Client**: [name]
+    - **Engagement Type**: [type]
+    - **Start Date**: [date]
+    - **Current Phase**: [phase]
+    - **Expected Completion**: [date]
+    
+    ## Progress Summary
+    [Detailed progress analysis]
+    
+    ## Key Achievements
+    [Major accomplishments]
+    
+    ## Current Challenges
+    [Active challenges and risks]
+    
+    ## Action Items Summary
+    [Overview of all open action items]
+    
+    ## Next Steps
+    [Immediate next steps and timeline]
+    
+    Use this engagement data:
+    {engagement_data}
+    
+  # Action items document
+  action_items_doc: |
+    Create a comprehensive action items tracking document:
+    
+    # Action Items Master List - [Client Name]
+    
+    ## Summary
+    - **Total Open Items**: [count]
+    - **High Priority**: [count]
+    - **Medium Priority**: [count]
+    - **Low Priority**: [count]
+    - **Overdue Items**: [count]
+    
+    ## High Priority Items
+    [Detailed list with all information]
+    
+    ## Medium Priority Items
+    [Detailed list with all information]
+    
+    ## Low Priority Items
+    [Detailed list with all information]
+    
+    ## Completed Items
+    [List of completed items for reference]
+    
+    Use this action items data:
+    {action_items_data}
+    
+  # Win/Loss analysis document
+  win_loss_doc: |
+    Create a professional win/loss probability analysis document:
+    
+    # Win/Loss Probability Analysis - [Client Name]
+    
+    ## Executive Summary
+    [High-level probability assessment]
+    
+    ## Probability Assessment
+    - **Current Probability**: [X%]
+    - **Confidence Level**: [High/Medium/Low]
+    - **Trend Analysis**: [Improving/Declining/Stable]
+    
+    ## Positive Indicators
+    [Detailed analysis of win factors]
+    
+    ## Risk Factors
+    [Detailed analysis of loss factors]
+    
+    ## Competitive Position
+    [Analysis of competitive landscape]
+    
+    ## Critical Success Factors
+    [What needs to happen to win]
+    
+    ## Recommendations
+    [Specific actions to improve probability]
+    
+    ## Timeline Impact
+    [How timing affects the outcome]
+    
+    Use this analysis data:
+    {analysis_data}
+
+# Error Handling Prompts
+error_handling:
+  # Fallback for failed analysis
+  fallback_analysis: |
+    The previous analysis attempt failed. Please provide a basic summary of this transcript focusing on:
+    
+    1. Main topics discussed
+    2. Key participants
+    3. Any action items mentioned
+    4. Overall tone of the conversation
+    
+    Transcript:
+    {transcript_text}
+    
+  # Context window management
+  chunk_analysis: |
+    This is a portion of a longer transcript. Please analyze this chunk and provide:
+    
+    1. Key topics discussed in this section
+    2. Any action items mentioned
+    3. Notable statements or decisions
+    4. Sentiment indicators
+    
+    This will be combined with other chunks for a complete analysis.
+    
+    Transcript chunk:
+    {chunk_text} 

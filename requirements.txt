@@ -1,0 +1,20 @@
+# Core dependencies for semgrep_pov_assistant
+anthropic>=0.18.0
+python-dotenv>=1.0.0
+
+# Data processing and utilities
+pandas>=2.0.0
+numpy>=1.24.0
+python-dateutil>=2.8.0
+
+# File handling and text processing
+pathlib2>=2.3.0
+chardet>=5.0.0
+
+# Logging and configuration
+pyyaml>=6.0
+colorama>=0.4.6
+
+# Optional: For better text processing
+nltk>=3.8.0
+textblob>=0.17.0 
