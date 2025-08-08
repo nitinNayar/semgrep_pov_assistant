@@ -207,7 +207,7 @@ engagements/
 ### Processing an Engagement
 ```bash
 # Process all transcripts in an engagement folder
-python main.py --transcripts-dir engagements/ikea_engagement_2024 --output-dir engagements/ikea_engagement_2024/results
+python main.py --transcripts-dir engagements/customer_engagement_2024 --output-dir engagements/customer_engagement_2024/results
 
 # Process with debug logging
 python main.py --transcripts-dir /path/to/engagement --output-dir /path/to/results --debug
@@ -305,8 +305,8 @@ Debug mode provides detailed information including:
 
 #### Example Debug Output
 ```
-DEBUG - Transcripts directory (absolute path): /Users/user/semgrep_pov_assistant/engagements/ikea_engagement_2024
-DEBUG - Directory contents of /Users/user/semgrep_pov_assistant/engagements/ikea_engagement_2024:
+DEBUG - Transcripts directory (absolute path): /Users/user/semgrep_pov_assistant/engagements/customer_engagement_2024
+DEBUG - Directory contents of /Users/user/semgrep_pov_assistant/engagements/customer_engagement_2024:
 DEBUG -   📄 File: call_1_transcript.md (64836 bytes)
 DEBUG -   📄 File: call_2_transcript.txt (12345 bytes)
 DEBUG -   📁 Directory: results
