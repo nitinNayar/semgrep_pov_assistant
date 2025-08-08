@@ -1005,9 +1005,7 @@ Timestamp: {datetime.now().isoformat()}
         doc.add_heading('Key Discussion Points', level=1)
         discussion_points = analysis.get('key_discussion_points', [])
         for point in discussion_points:
-            p = doc.add_paragraph()
-            p.add_run('• ').bold = True
-            p.add_run(point)
+            doc.add_paragraph(point, style='List Bullet')
         
         # Business Context
         doc.add_heading('Business Context', level=1)
@@ -1025,7 +1023,7 @@ Timestamp: {datetime.now().isoformat()}
         action_items = call_data.get('action_items', [])
         for item in action_items:
             p = doc.add_paragraph()
-            p.add_run(f"• {item.get('action', 'No action specified')}").bold = True
+            p.add_run(f"{item.get('action', 'No action specified')}").bold = True
             p.add_run(f" (Owner: {item.get('owner', 'Not assigned')}, Due: {item.get('due_date', 'Not specified')}, Priority: {item.get('priority', 'Medium')})")
         
         # Sentiment Analysis
@@ -1040,13 +1038,13 @@ Timestamp: {datetime.now().isoformat()}
             if indicators:
                 doc.add_paragraph('Key Indicators:')
                 for indicator in indicators:
-                    doc.add_paragraph(f"• {indicator}", style='List Bullet')
+                    doc.add_paragraph(indicator, style='List Bullet')
         
         # Next Steps
         doc.add_heading('Next Steps', level=1)
         next_steps = analysis.get('next_steps', [])
         for step in next_steps:
-            doc.add_paragraph(f"• {step}", style='List Bullet')
+            doc.add_paragraph(step, style='List Bullet')
         
         # Footer
         doc.add_paragraph()
@@ -1093,19 +1091,19 @@ Timestamp: {datetime.now().isoformat()}
             doc.add_heading('Unresolved Technical Questions', level=2)
             unresolved_questions = tech_strategy.get('unresolved_technical_questions', [])
             for question in unresolved_questions:
-                doc.add_paragraph(f"• {question}", style='List Bullet')
+                doc.add_paragraph(question, style='List Bullet')
             
             # Recommended Demonstrations
             doc.add_heading('Recommended Demonstrations', level=2)
             recommended_demos = tech_strategy.get('recommended_demonstrations', [])
             for demo in recommended_demos:
-                doc.add_paragraph(f"• {demo}", style='List Bullet')
+                doc.add_paragraph(demo, style='List Bullet')
             
             # Competitive Advantages
             doc.add_heading('Competitive Advantages', level=2)
             competitive_advantages = tech_strategy.get('competitive_advantages', [])
             for advantage in competitive_advantages:
-                doc.add_paragraph(f"• {advantage}", style='List Bullet')
+                doc.add_paragraph(advantage, style='List Bullet')
         
         # Next Steps
         doc.add_heading('Recommended Next Steps', level=1)
@@ -1251,7 +1249,7 @@ Timestamp: {datetime.now().isoformat()}
         if additional_details:
             doc.add_heading('Additional Technical Details', level=1)
             for detail in additional_details:
-                doc.add_paragraph(f"• {detail}", style='List Bullet')
+                doc.add_paragraph(detail, style='List Bullet')
         
         # Deployment Complexity
         doc.add_heading('Deployment Complexity', level=1)
@@ -1263,21 +1261,21 @@ Timestamp: {datetime.now().isoformat()}
         if migration:
             doc.add_heading('Migration Considerations', level=1)
             for consideration in migration:
-                doc.add_paragraph(f"• {consideration}", style='List Bullet')
+                doc.add_paragraph(consideration, style='List Bullet')
         
         # Technical Risks
         risks = deployment_data.get('technical_risks', [])
         if risks:
             doc.add_heading('Technical Risks', level=1)
             for risk in risks:
-                doc.add_paragraph(f"• {risk}", style='List Bullet')
+                doc.add_paragraph(risk, style='List Bullet')
         
         # Recommendations
         recommendations = deployment_data.get('recommendations', [])
         if recommendations:
             doc.add_heading('Technical Recommendations', level=1)
             for rec in recommendations:
-                doc.add_paragraph(f"• {rec}", style='List Bullet')
+                doc.add_paragraph(rec, style='List Bullet')
         
         # Footer
         if deployment_data.get('fallback_analysis'):
@@ -1311,7 +1309,7 @@ Timestamp: {datetime.now().isoformat()}
             if challenges:
                 doc.add_heading('Key Challenges', level=2)
                 for challenge in challenges:
-                    doc.add_paragraph(f"• {challenge}", style='List Bullet')
+                    doc.add_paragraph(challenge, style='List Bullet')
             
             evidence = current_state.get('evidence', '')
             if evidence:
@@ -1326,21 +1324,21 @@ Timestamp: {datetime.now().isoformat()}
             if operational_impact:
                 doc.add_heading('Operational Impact', level=2)
                 for impact in operational_impact:
-                    doc.add_paragraph(f"• {impact}", style='List Bullet')
+                    doc.add_paragraph(impact, style='List Bullet')
             
             # Business Impact
             business_impact = negative_consequences.get('business_impact', [])
             if business_impact:
                 doc.add_heading('Business Impact', level=2)
                 for impact in business_impact:
-                    doc.add_paragraph(f"• {impact}", style='List Bullet')
+                    doc.add_paragraph(impact, style='List Bullet')
             
             # Security Risk
             security_risk = negative_consequences.get('security_risk', [])
             if security_risk:
                 doc.add_heading('Security Risk', level=2)
                 for risk in security_risk:
-                    doc.add_paragraph(f"• {risk}", style='List Bullet')
+                    doc.add_paragraph(risk, style='List Bullet')
             
             evidence = negative_consequences.get('evidence', '')
             if evidence:
@@ -1355,21 +1353,21 @@ Timestamp: {datetime.now().isoformat()}
             if operational_goals:
                 doc.add_heading('Operational Goals', level=2)
                 for goal in operational_goals:
-                    doc.add_paragraph(f"• {goal}", style='List Bullet')
+                    doc.add_paragraph(goal, style='List Bullet')
             
             # Security Goals
             security_goals = desired_future_state.get('security_goals', [])
             if security_goals:
                 doc.add_heading('Security Goals', level=2)
                 for goal in security_goals:
-                    doc.add_paragraph(f"• {goal}", style='List Bullet')
+                    doc.add_paragraph(goal, style='List Bullet')
             
             # Business Goals
             business_goals = desired_future_state.get('business_goals', [])
             if business_goals:
                 doc.add_heading('Business Goals', level=2)
                 for goal in business_goals:
-                    doc.add_paragraph(f"• {goal}", style='List Bullet')
+                    doc.add_paragraph(goal, style='List Bullet')
             
             evidence = desired_future_state.get('evidence', '')
             if evidence:
@@ -1384,28 +1382,28 @@ Timestamp: {datetime.now().isoformat()}
             if sast_capabilities:
                 doc.add_heading('SAST Capabilities', level=2)
                 for capability in sast_capabilities:
-                    doc.add_paragraph(f"• {capability}", style='List Bullet')
+                    doc.add_paragraph(capability, style='List Bullet')
             
             # SCA Capabilities
             sca_capabilities = key_capabilities.get('sca_capabilities', [])
             if sca_capabilities:
                 doc.add_heading('SCA Capabilities', level=2)
                 for capability in sca_capabilities:
-                    doc.add_paragraph(f"• {capability}", style='List Bullet')
+                    doc.add_paragraph(capability, style='List Bullet')
             
             # Secrets Capabilities
             secrets_capabilities = key_capabilities.get('secrets_capabilities', [])
             if secrets_capabilities:
                 doc.add_heading('Secrets Detection Capabilities', level=2)
                 for capability in secrets_capabilities:
-                    doc.add_paragraph(f"• {capability}", style='List Bullet')
+                    doc.add_paragraph(capability, style='List Bullet')
             
             # Integration Capabilities
             integration_capabilities = key_capabilities.get('integration_capabilities', [])
             if integration_capabilities:
                 doc.add_heading('Integration Capabilities', level=2)
                 for capability in integration_capabilities:
-                    doc.add_paragraph(f"• {capability}", style='List Bullet')
+                    doc.add_paragraph(capability, style='List Bullet')
             
             evidence = key_capabilities.get('evidence', '')
             if evidence:
@@ -1420,21 +1418,21 @@ Timestamp: {datetime.now().isoformat()}
             if primary_focus:
                 doc.add_heading('Primary Focus Areas', level=2)
                 for focus in primary_focus:
-                    doc.add_paragraph(f"• {focus}", style='List Bullet')
+                    doc.add_paragraph(focus, style='List Bullet')
             
             # Demonstration Priorities
             demo_priorities = pov_strategy.get('demonstration_priorities', [])
             if demo_priorities:
                 doc.add_heading('Demonstration Priorities', level=2)
                 for priority in demo_priorities:
-                    doc.add_paragraph(f"• {priority}", style='List Bullet')
+                    doc.add_paragraph(priority, style='List Bullet')
             
             # Success Metrics
             success_metrics = pov_strategy.get('success_metrics', [])
             if success_metrics:
                 doc.add_heading('Success Metrics', level=2)
                 for metric in success_metrics:
-                    doc.add_paragraph(f"• {metric}", style='List Bullet')
+                    doc.add_paragraph(metric, style='List Bullet')
             
             evidence = pov_strategy.get('evidence', '')
             if evidence:
