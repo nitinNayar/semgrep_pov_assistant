@@ -190,7 +190,7 @@ For managing multiple engagements, you can use custom directories:
 ### Example Engagement Structure
 ```
 engagements/
-├── ikea_engagement_2024/
+├── customer_engagement_2024/
 │   ├── call_1_transcript.md
 │   ├── call_2_transcript.txt
 │   └── results/
