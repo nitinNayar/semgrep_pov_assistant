@@ -1,18 +1,29 @@
 # Semgrep POV Assistant
 
-A Python application that analyzes call transcripts using Claude AI to extract key insights, action items, and sentiment analysis. The application processes transcript files and generates comprehensive analysis reports as local files.
+A comprehensive Python application that analyzes call transcripts using Claude AI to extract key insights, action items, sentiment analysis, and generate professional Word documents. The application processes transcript files and generates comprehensive analysis reports with proper formatting for sales teams and stakeholders.
 
-## Features
+## 🚀 Features
 
-- **Call Transcript Analysis**: Analyzes call transcripts to extract key discussion points, business context, and insights
-- **Call Classification**: Automatically categorizes calls as "Discovery Call", "Demo Call", or "POV Check-in"
-- **Action Item Extraction**: Identifies and categorizes action items with owners, due dates, and priorities
-- **Sentiment Analysis**: Analyzes call sentiment and engagement levels
-- **Local File Output**: Generates formatted text files and JSON data for easy review and sharing
-- **Multi-format Support**: Supports TXT, DOCX, PDF, and MD transcript files
-- **Comprehensive Logging**: Detailed logging with colored output for debugging and monitoring
+- **📊 Call Transcript Analysis**: Analyzes call transcripts to extract key discussion points, business context, and insights
+- **🏷️ Call Classification**: Automatically categorizes calls as "Discovery Call", "Demo Call", or "POV Check-in"
+- **📋 Action Item Extraction**: Identifies and categorizes action items with owners, due dates, and priorities
+- **😊 Sentiment Analysis**: Analyzes call sentiment and engagement levels
+- **📄 Professional Word Documents**: Generates beautifully formatted Word documents (.docx) with proper headings, tables, and styling
+- **📊 POV Win/Loss Analysis**: Engagement-level analysis with win probability, risk assessment, and technical strategy
+- **🔧 Technical Deployment Analysis**: Comprehensive technical infrastructure analysis including SCM, CI, languages, and security tools
+- **👥 Customer Overview Analysis**: Detailed customer state analysis with current challenges, desired future state, and POV strategy
+- **📁 Multi-format Support**: Supports TXT, DOCX, PDF, and MD transcript files
+- **📝 Comprehensive Logging**: Detailed logging with colored output for debugging and monitoring
+- **🎯 Engagement-Specific Processing**: Process entire engagement folders with custom input/output directories
 
-## Quick Start
+## 🏗️ Architecture
+
+- **ClaudeClient**: Handles communication with Anthropic's Claude API
+- **TranscriptProcessor**: Orchestrates transcript analysis and processing
+- **LocalFileClient**: Creates formatted output files locally (Word documents and JSON data)
+- **Logger**: Comprehensive logging with colored output
+
+## 🚀 Quick Start
 
 ### 1. Setup Environment
 
@@ -47,11 +58,8 @@ Place your call transcript files in the `data/transcripts/` directory. Supported
 ### 4. Run the Application
 
 ```bash
-# Process transcripts and generate local files
+# Process transcripts and generate Word documents
 python main.py
-
-# Process transcripts only (no file creation)
-python main.py --no-google-docs
 
 # Enable debug logging
 python main.py --debug
@@ -60,39 +68,33 @@ python main.py --debug
 python main.py --transcripts-dir /path/to/engagement/transcripts --output-dir /path/to/engagement/results
 ```
 
-## Output Files
+## 📄 Output Files
 
-The application generates the following files in `data/output/`:
+The application generates professional Word documents and JSON data files in timestamped directories:
 
-- **Call Summary** (`call_summary_YYYYMMDD_HHMMSS.txt`): Comprehensive analysis of the call
-- **Action Items** (`action_items_YYYYMMDD_HHMMSS.txt`): Extracted action items with details
-- **Sentiment Analysis** (`sentiment_analysis_YYYYMMDD_HHMMSS.txt`): Sentiment and engagement analysis
-- **JSON Analysis** (`call_analysis_YYYYMMDD_HHMMSS.json`): Complete structured data
-- **POV Analysis** (`pov_analysis_YYYYMMDD_HHMMSS.txt`): Engagement-level POV Win/Loss analysis
-
-### **📁 File Locations**
-
-For engagement-specific processing, files are created in:
+### **📁 File Structure**
 ```
 /path/to/engagement/output/analysis_YYYYMMDD_HHMMSS/
-├── call_summary_YYYYMMDD_HHMMSS.txt
-├── action_items_YYYYMMDD_HHMMSS.txt
-├── sentiment_analysis_YYYYMMDD_HHMMSS.txt
-├── call_analysis_YYYYMMDD_HHMMSS.json
-└── pov_analysis_YYYYMMDD_HHMMSS.txt
+├── call_summary_YYYYMMDD_HHMMSS.docx          # Professional call summary
+├── action_items_YYYYMMDD_HHMMSS.docx          # Formatted action items
+├── sentiment_analysis_YYYYMMDD_HHMMSS.docx    # Sentiment analysis report
+├── pov_analysis_YYYYMMDD_HHMMSS.docx          # POV Win/Loss analysis
+├── technical_deployment_YYYYMMDD_HHMMSS.docx  # Technical infrastructure analysis
+├── customer_overview_YYYYMMDD_HHMMSS.docx     # Customer overview analysis
+└── call_analysis_YYYYMMDD_HHMMSS.json        # Complete structured data
 ```
 
-### **📄 POV Analysis File Content**
+### **📄 Word Document Features**
 
-The POV analysis file contains:
-- **Win Probability Assessment** with detailed reasoning
-- **Key Positive Factors** supporting the win probability
-- **Risk Analysis** with severity, timeline, and mitigation strategies
-- **Technical Win Strategy** including unresolved questions and recommended demos
-- **Actionable Next Steps** to improve win probability
-- **Key Transcript Snippets** with supporting evidence
+Each Word document includes:
+- **Professional Formatting**: Proper headings, tables, bullet points, and styling
+- **Executive Summary**: High-level insights and key findings
+- **Detailed Analysis**: Comprehensive breakdown of all analysis components
+- **Evidence-Based**: Relevant transcript snippets and supporting context
+- **Actionable Insights**: Clear recommendations and next steps
+- **Professional Branding**: Consistent formatting with Semgrep branding
 
-## Call Classification
+## 🏷️ Call Classification
 
 The application automatically classifies each call transcript into one of three categories:
 
@@ -113,77 +115,61 @@ The system uses two approaches to classify calls:
 
 2. **AI Analysis**: Uses Claude to analyze transcript content when pattern matching is inconclusive
 
-### **📊 Classification Summary**
-
-The application displays a classification summary showing:
-- Total number of each call type
-- Individual file classifications
-- Processing statistics by call type
-
-## POV Win/Loss Analysis
+## 🎯 POV Win/Loss Analysis
 
 The application provides comprehensive Proof of Value (POV) analysis across all call transcripts in an engagement:
 
-### **🎯 Analysis Components**
+### **📊 Analysis Components**
 
-1. **Win Probability Assessment** - Percentage likelihood of winning the POV
-2. **Risk Analysis** - Identified risks with severity, timeline, and mitigation strategies
-3. **Technical Win Strategy** - Unresolved questions, recommended demos, and competitive advantages
-4. **Actionable Next Steps** - Specific recommendations to improve win probability
-5. **Key Transcript Snippets** - Relevant quotes supporting the analysis
+1. **Win Probability Assessment** - Percentage likelihood of winning the POV with detailed reasoning
+2. **Key Positive Factors** - Supporting evidence and positive indicators
+3. **Risk Analysis** - Identified risks with severity, timeline, and mitigation strategies
+4. **Technical Win Strategy** - Unresolved questions, recommended demos, and competitive advantages
+5. **Actionable Next Steps** - Specific recommendations to improve win probability
+6. **Key Transcript Snippets** - Relevant quotes supporting the analysis
 
-### **📊 Analysis Output**
+### **📄 POV Analysis Word Document Content**
 
-```
-🎯 POV WIN/LOSS ANALYSIS
-============================================================
-📊 Win Probability: 80%
-💡 Reasoning: Based on positive sentiment and high engagement
+The POV analysis Word document includes:
+- **Win Probability Assessment** with detailed reasoning
+- **Key Positive Factors** supporting the win probability
+- **Risk Analysis** with severity, timeline, and mitigation strategies
+- **Technical Win Strategy** including unresolved questions and recommended demos
+- **Actionable Next Steps** to improve win probability
+- **Key Transcript Snippets** with supporting evidence
 
-✅ Key Positive Factors:
-   • Strong technical engagement
-   • Positive sentiment across calls
-   • Clear next steps identified
+## 🔧 Technical Deployment Analysis
 
-⚠️  Key Risks:
-   • Privacy compliance concerns (Severity: high)
-     Time Open: Since initial call
-     Mitigation: Provide detailed privacy documentation
+The application analyzes technical infrastructure details across all call transcripts:
 
-🔧 Technical Win Strategy:
-   📝 Unresolved Technical Questions:
-     • Integration with existing GitHub setup
-     • RBAC implementation details
-   🎯 Recommended Demonstrations:
-     • False positive reduction capabilities
-     • Dependency analysis features
-   🏆 Competitive Advantages:
-     • AI-powered learning vs. static rules
-     • Multi-language support vs. limited options
+### **📊 Analysis Components**
 
-📋 Recommended Next Steps:
-   • Send pricing proposal within one week
-   • Schedule follow-up call for POC planning
-   • Prepare privacy documentation
-```
+1. **SCM Platform** - Source code management platform and deployment type
+2. **CI Pipelines** - Continuous integration tools and workflows
+3. **Programming Languages** - Primary and POC focus languages
+4. **Integrations** - Current and interested integrations
+5. **Supply Chain Security** - Languages tested and package managers
+6. **Current Security Tools** - SAST, DAST, SCA, Secrets Detection, ASPM tools
+7. **IDE Environment** - Primary IDE and additional tools
+8. **Deployment Complexity** - Overall complexity assessment
+9. **Migration Considerations** - Technical migration requirements
+10. **Technical Risks** - Identified technical risks and challenges
+11. **Recommendations** - Technical recommendations and best practices
 
-### **🔍 Analysis Methodology**
+## 👥 Customer Overview Analysis
 
-The system aggregates insights across all call transcripts to provide engagement-level analysis:
+The application provides comprehensive customer state analysis:
 
-1. **Individual Call Analysis** - Extracts key insights from each transcript
-2. **Engagement Aggregation** - Combines insights across all calls
-3. **POV Probability Assessment** - Generates comprehensive win/loss analysis
-4. **Risk & Mitigation Planning** - Identifies and addresses blockers
+### **📊 Analysis Components**
 
-### **📈 Benefits**
+1. **Current State** - Current SAST, SCA, and Secrets Detection tooling and challenges
+2. **Negative Consequences** - Operational, business, and security impacts of current state
+3. **Desired Future State** - Operational, security, and business goals
+4. **Key Semgrep Capabilities** - Relevant capabilities for SAST, SCA, Secrets, and Integration
+5. **POV Strategy** - Primary focus areas, demonstration priorities, and success metrics
+6. **Key Transcript Snippets** - Supporting evidence and context
 
-- **Engagement-Level Insights** - Analysis across multiple calls, not just individual transcripts
-- **Risk Identification** - Proactive identification of deal blockers
-- **Actionable Guidance** - Specific steps to improve win probability
-- **Evidence-Based Analysis** - Uses actual transcript content and sentiment data
-
-## Engagement-Specific Processing
+## 📁 Engagement-Specific Processing
 
 For managing multiple engagements, you can use custom directories:
 
@@ -193,27 +179,30 @@ engagements/
 ├── customer_engagement_2024/
 │   ├── call_1_transcript.md
 │   ├── call_2_transcript.txt
-│   └── results/
+│   └── output/
 │       └── analysis_20250806_134534/
-│           ├── call_summary_20250806_134534.txt
-│           ├── action_items_20250806_134534.txt
-│           ├── sentiment_analysis_20250806_134534.txt
+│           ├── call_summary_20250806_134534.docx
+│           ├── action_items_20250806_134534.docx
+│           ├── sentiment_analysis_20250806_134534.docx
+│           ├── pov_analysis_20250806_134534.docx
+│           ├── technical_deployment_20250806_134534.docx
+│           ├── customer_overview_20250806_134534.docx
 │           └── call_analysis_20250806_134534.json
 └── acme_engagement_2024/
     ├── discovery_call.md
-    └── results/
+    └── output/
 ```
 
 ### Processing an Engagement
 ```bash
 # Process all transcripts in an engagement folder
-python main.py --transcripts-dir engagements/customer_engagement_2024 --output-dir engagements/customer_engagement_2024/results
+python main.py --transcripts-dir engagements/customer_engagement_2024 --output-dir engagements/customer_engagement_2024/output
 
 # Process with debug logging
 python main.py --transcripts-dir /path/to/engagement --output-dir /path/to/results --debug
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 Edit `config/config.yaml` to customize:
 
@@ -223,63 +212,77 @@ Edit `config/config.yaml` to customize:
 - **Output Settings**: File paths and formatting options
 - **Logging**: Log levels and output options
 
-## Example Output
+## 📊 Example Output
 
-### Call Summary
+### Call Summary Word Document
 ```
-# Call Summary - Semgrep POV Assistant
+Call Summary - Semgrep POV Assistant
 
-## Call Details
+Call Details
 - Date: 2024-01-15
 - Participants: John Smith, Sarah Johnson, Mike Davis
 - Duration: 90 minutes
 - Call Type: Discovery call
 
-## Executive Summary
+Executive Summary
 Comprehensive analysis of security pipeline integration discussion...
 
-## Key Discussion Points
-- Security pipeline integration
-- Technical capabilities discussion
-- POC planning
-- Training and support requirements
+Key Discussion Points
+• Security pipeline integration
+• Technical capabilities discussion
+• POC planning
+• Training and support requirements
 
-## Action Items
-- Send POC proposal and timeline (John Smith, End of day, High)
-- Schedule technical deep-dive session (John Smith, TBD, High)
-- Coordinate POC setup (Sarah Johnson, TBD, High)
+Action Items
+• Send POC proposal and timeline (John Smith, End of day, High)
+• Schedule technical deep-dive session (John Smith, TBD, High)
+• Coordinate POC setup (Sarah Johnson, TBD, High)
 ```
 
-### Action Items
+### POV Analysis Word Document
 ```
-# Action Items - Semgrep POV Assistant
+POV Win/Loss Analysis - Semgrep POV Assistant
 
-## Summary
-Total Action Items: 5
+Win Probability Assessment
+Win Probability: 80%
+Reasoning: Based on positive sentiment and high engagement
 
-## Action Items List
+Key Positive Factors
+✅ Strong technical engagement
+✅ Positive sentiment across calls
+✅ Clear next steps identified
 
-### Action Item 1
-- **Action**: Send POC proposal and timeline
-- **Owner**: John Smith
-- **Due Date**: by end of day
-- **Priority**: High
+Key Risks
+⚠️ Privacy compliance concerns (Severity: high)
+   Time Open: Since initial call
+   Mitigation: Provide detailed privacy documentation
+
+Technical Win Strategy
+📝 Unresolved Technical Questions:
+   • Integration with existing GitHub setup
+   • RBAC implementation details
+
+🎯 Recommended Demonstrations:
+   • False positive reduction capabilities
+   • Dependency analysis features
+
+🏆 Competitive Advantages:
+   • AI-powered learning vs. static rules
+   • Multi-language support vs. limited options
 ```
 
-## Architecture
-
-- **ClaudeClient**: Handles communication with Anthropic's Claude API
-- **TranscriptProcessor**: Orchestrates transcript analysis and processing
-- **LocalFileClient**: Creates formatted output files locally
-- **Logger**: Comprehensive logging with colored output
-
-## Requirements
+## 🔧 Requirements
 
 - Python 3.8+
 - Anthropic API key
-- Required packages (see `requirements.txt`)
+- Required packages (see `requirements.txt`):
+  - `anthropic>=0.18.0` - Claude API client
+  - `python-docx>=0.8.11` - Word document creation
+  - `python-dotenv>=1.0.0` - Environment variable management
+  - `pyyaml>=6.0` - Configuration file parsing
+  - Additional dependencies for text processing and utilities
 
-## Troubleshooting
+## 🛠️ Troubleshooting
 
 ### Common Issues
 
@@ -287,6 +290,7 @@ Total Action Items: 5
 2. **No Transcript Files**: Add transcript files to `data/transcripts/`
 3. **Permission Errors**: Check file permissions for output directory
 4. **API Rate Limits**: The application includes retry logic with exponential backoff
+5. **Word Document Creation**: Ensure `python-docx` is installed for Word document generation
 
 ### Debug Mode
 
@@ -309,7 +313,7 @@ DEBUG - Transcripts directory (absolute path): /Users/user/semgrep_pov_assistant
 DEBUG - Directory contents of /Users/user/semgrep_pov_assistant/engagements/customer_engagement_2024:
 DEBUG -   📄 File: call_1_transcript.md (64836 bytes)
 DEBUG -   📄 File: call_2_transcript.txt (12345 bytes)
-DEBUG -   📁 Directory: results
+DEBUG -   📁 Directory: output
 DEBUG - Total items in directory: 3
 DEBUG - Found 1 md files:
 DEBUG -   - call_1_transcript.md
@@ -317,7 +321,32 @@ DEBUG - Found 1 txt files:
 DEBUG -   - call_2_transcript.txt
 ```
 
-## Contributing
+## 🧪 Testing Setup
+
+Run the test setup script to verify your environment:
+
+```bash
+python test_setup.py
+```
+
+This will check:
+- ✅ Python version compatibility
+- ✅ All required dependencies
+- ✅ Environment variables
+- ✅ Configuration files
+- ✅ Directory structure
+- ✅ Anthropic API connection
+
+## 📈 Business Value
+
+- **Professional Deliverables**: Sales teams can share professionally formatted analysis documents
+- **Comprehensive Analysis**: Multi-level analysis from individual calls to engagement-level insights
+- **Evidence-Based**: Clear citations and context from actual call transcripts
+- **Actionable Insights**: Structured recommendations and next steps
+- **Scalable Solution**: Easy to extend for additional document types or formatting needs
+- **Engagement Management**: Process entire customer engagements with custom directories
+
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -325,6 +354,6 @@ DEBUG -   - call_2_transcript.txt
 4. Add tests if applicable
 5. Submit a pull request
 
-## License
+## 📄 License
 
 [Add your license information here] 
